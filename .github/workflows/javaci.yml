@@ -28,7 +28,7 @@ jobs:
 
   Package:
     runs-on: ubuntu-latest
-    needs: build
+    needs: test
 
     steps:
     - name: Download a Build Artifact
@@ -40,13 +40,10 @@ jobs:
     - name: List downloaded files
       run: ls staging
 
-    - name: Run tests on downloaded artifact
-      run: |
-        echo "Running tests on downloaded artifact..."
-        # Replace with actual test command or script
-        java -jar staging/your-artifact-name.jar --test
+    
   test:
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
     - name: Checkout code
