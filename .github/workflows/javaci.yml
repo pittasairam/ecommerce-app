@@ -36,7 +36,4 @@ jobs:
       with:
         name: java-build
 
-    - name: Deploy artifact
-      run: |
-        echo "Deploying artifact..."
-        ls java-build
+   
