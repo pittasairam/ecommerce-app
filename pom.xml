@@ -92,13 +92,19 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+      <version>3.5.3</version> <!-- Optional: match your current version -->
+      <configuration>
+        <mainClass>com.pittasairam.ecommerce.EcommerceAppApplication</mainClass>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+
 
 </project>
