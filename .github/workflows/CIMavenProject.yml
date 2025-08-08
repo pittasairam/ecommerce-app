@@ -3,11 +3,16 @@ name: CI Maven Project
 
 on:
   workflow_dispatch:
+    inputs:
+      TARGE_ENVIRONMENT:
+        type: environment 
+        default: dev
 
 jobs:
   build:
     name: Build Project
     runs-on: ubuntu-latest
+    environment: ${{inputs.TARGE_ENVIRONMENT}}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4.2.2
