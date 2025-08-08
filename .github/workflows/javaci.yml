@@ -18,7 +18,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Maven
-      run: mvn --batch-mode --update-snapshots -DskipTests 
+      run: mvn clean install
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
@@ -36,6 +36,32 @@ jobs:
       with:
           name: java-build
           path: staging
+      
+    - name: List downloaded files
+      run: ls staging
+
+    - name: Run tests on downloaded artifact
+      run: |
+        echo "Running tests on downloaded artifact..."
+        # Replace with actual test command or script
+        java -jar staging/your-artifact-name.jar --test
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.14.1
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn test
+
+
 
 
    
