@@ -1,11 +1,15 @@
-name: CI Maven Project 
-on :
- workflow_dispatch:
+name: CI Maven Project
+
+on:
+  workflow_dispatch:
+
 jobs:
+  call-reused-workflow:
+    uses: ./.github/workflows/reused.yml
+
   CI-Non-Conterzation-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/reused.yml
       - name: Set Up Java JDK
         uses: actions/setup-java@v4.7.1
         with:
@@ -14,5 +18,3 @@ jobs:
 
       - name: Print Java version
         run: java -version
-    
-    
