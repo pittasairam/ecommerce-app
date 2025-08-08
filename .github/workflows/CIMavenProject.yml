@@ -16,7 +16,9 @@ jobs:
           java-version: '17'
           distribution: 'oracle'
       - name: Build using Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: |
+          cd ecommerce-app
+          mvn --batch-mode --update-snapshots verify
 
       - name: Print Java version
         run: java -version, maven -version
