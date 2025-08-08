@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  #call-reused-workflow:
-   # uses: ./.github/workflows/reused.yml
+ call-reused-workflow:
+    uses: ./.github/workflows/reused.yml
    
  CI-Non-Conterzation-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
+      #- name: Checkout
+       # uses: actions/checkout@v4.2.2
 
       - name: Set Up Java JDK
         uses: actions/setup-java@v4.7.1
