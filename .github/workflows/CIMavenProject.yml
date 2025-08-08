@@ -10,10 +10,8 @@ jobs:
  CI-Non-Conterzation-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/reused.yml
-
-       #- name: Checkout use
-       # uses: actions/checkout@v4.2.2
+      - name: Checkout use
+        uses: actions/checkout@v4.2.2
 
       - name: Set Up Java JDK
         uses: actions/setup-java@v4.7.1
