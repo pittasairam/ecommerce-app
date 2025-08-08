@@ -34,7 +34,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v5.0.0
       with:
-          name: Package
+          name: java-build
           path: staging
 
 
