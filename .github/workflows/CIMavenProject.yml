@@ -74,6 +74,15 @@ jobs:
     - name: Package with Maven
       run: mvn package
 
+ CI-Non-Conterzation-deploy:
+    name: Deploy 
+    runs-on: ubuntu-latest
+    needs: CI-Non-Conterzation-package
+
+    steps:
+    - name: Deployment step
+      run: echo "Deploying application..."
+
 
      # - name: Build using Maven
      #   run: mvn --batch-mode --update-snapshots verify des
