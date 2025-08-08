@@ -1,45 +1,45 @@
-name: CI Maven Project # Name of the workflow
+name: CI Maven Project
 
 on:
-  workflow_dispatch: # This workflow can be triggered manually from the GitHub Actions UI.
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Project and Run Unit Tests # Name of the build job
-    runs-on: ubuntu-latest # Specifies the runner environment for the job.
+    name: Build Project and Run Unit Tests
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code # Step to checkout the repository's code.
+      - name: Checkout Code
         uses: actions/checkout@v4.2.2
 
-      - name: Set Up Java 17 (Oracle) # Step to set up Java 17.
+      - name: Set Up Java 17 (Oracle)
         uses: actions/setup-java@v4.7.1
         with:
           java-version: '17'
           distribution: 'oracle'
 
-      - name: Cache Maven Dependencies # Step to cache Maven dependencies for faster builds.
+      - name: Cache Maven Dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2 # Specifies the path to cache.
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }} # Cache key based on OS and pom.xml hash.
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build and Test with Maven # Step to build and test the project using Maven.
+      - name: Build and Test with Maven
         run: mvn clean install 
         # mvn clean install will clean, compile, and run tests.
         # It's more efficient to combine these steps in one Maven command.
 
-      - name: Archive Build Artifact # Step to upload the build artifacts (the target directory).
+      - name: Archive Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: target-directory # Name of the artifact.
-          path: target/ # Path to the directory to upload.
+          name: target-directory
+          path: target/ # Upload the entire target directory as an artifact
 
 
   package:
-    name: Package Application # Name of the package job.
-    runs-on: ubuntu-latest # Specifies the runner environment.
+    name: Package Application
+    runs-on: ubuntu-latest
     needs: build # This job depends on the 'build' job completing successfully.
     steps:
       - name: Checkout Code
@@ -51,16 +51,17 @@ jobs:
           java-version: '17'
           distribution: 'oracle'
 
-      - name: Download Build Artifacts # Step to download the artifacts from the 'build' job.
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v4.6.2
         with:
-          name: target-directory # Name of the artifact to download.
-          path: target/ # Download the target directory to this path.
+          name: target-directory
+          path: target/ # Download the target directory from the 'build' job.
 
       - name: Package with Maven
-        run: mvn package -DskipTests # Packages the application, skipping tests (already run in 'build').
+        run: mvn package -DskipTests 
+        # Use -DskipTests since tests were already run in the 'build' job.
 
-      - name: Create Staging Directory and Copy JAR # Prepares a staging directory and copies the packaged JAR.
+      - name: Create Staging Directory and Copy JAR
         run: |
           mkdir -p staging
           shopt -s nullglob
@@ -70,24 +71,17 @@ jobs:
           else
             echo "No JAR files found in target/"
           fi
-          
-      - name: Upload Package Artifact # Uploads the final packaged application.
+
+      - name: Upload Package Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: Package # Name of the artifact to upload.
+          name: Package
           path: staging
 
-
   deploy:
-    name: Deploy Application # Name of the deploy job.
+    name: Deploy Application
     runs-on: ubuntu-latest
-    needs: package # This job depends on the 'package' job completing successfully.
+    needs: package
     steps:
-      - name: Download Package Artifact # Downloads the packaged artifact (JAR file) from the 'package' job.
-        uses: actions/download-artifact@v4.6.2
-        with:
-          name: Package # Name of the artifact to download (the final package).
-          path: deploy/app # Download the package to this path.
-          
       - name: Deployment Step
-        run: echo "Deploying application..." 
+        run: echo "Deploying application..."
