@@ -102,7 +102,11 @@ jobs:
         distribution: 'oracle'
 
     - name: Create staging directory and copy JAR
-      run: mkdir staging &amp &amp cp target/*.jar staging
+      run:  |
+        mkdir -p staging
+        shopt -s nullglob
+        cp target/*.jar staging || echo "No JAR files found"
+
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
