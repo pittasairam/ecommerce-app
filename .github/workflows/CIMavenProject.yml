@@ -65,7 +65,9 @@ jobs:
           distribution: 'oracle'
 
       - name: Package with Maven
-        run: mvn package
+        run: |
+            mvn package
+            mvn verify
 
       - name: Create Staging Directory and Copy JAR
         run: |
@@ -84,27 +86,12 @@ jobs:
           name: Package
           path: staging
 
-  verify:
-    name: Verify Package
-    runs-on: ubuntu-latest
-    needs: package
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-
-      - name: Set Up Java 17 (Oracle)
-        uses: actions/setup-java@v4.7.1
-        with:
-          java-version: '17'
-          distribution: 'oracle'
-
-      - name: Verify Package
-        run: mvn verify
+ 
 
   deploy:
     name: Deploy Application
     runs-on: ubuntu-latest
-    needs: verify
+    needs: package
     steps:
       - name: Deployment Step
         run: echo "Deploying application..."
