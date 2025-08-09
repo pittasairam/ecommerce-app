@@ -1,81 +1,61 @@
 name: CI Maven Project
-
 on:
   workflow_dispatch:
     inputs:
       TARGE_ENVIRONMENT:
         type: environment
         default: dev
-
 jobs:
-  
   call-reusable:
     needs: build
     name: Call Reusable Workflow
     uses: ./.github/workflows/reused.yml
-    
-
-
   build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.TARGE_ENVIRONMENT }}
-    
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Java JDK
         uses: actions/setup-java@v3.14.1
         with:
           java-version: '17'
           distribution: 'oracle'
-
       - name: Build with Maven
         run: mvn clean install
-
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: java-build
           path: target/*.jar
-
   test:
     runs-on: ubuntu-latest
     needs: build
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Java JDK
         uses: actions/setup-java@v3.14.1
         with:
           java-version: '17'
           distribution: 'oracle'
-
       - name: Run Maven Tests
         run: mvn test
-
   package:
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v5.0.0
         with:
           name: java-build
           path: staging
-
       - name: List downloaded files
         run: ls staging
-
   deploy:
     name: Deploy Application
     runs-on: ubuntu-latest
     needs: [package ,call-reusable]
-
     steps:
       - name: Deployment Step
         run: |
