@@ -12,11 +12,14 @@ jobs:
   call-reusable:
     name: Call Reusable Workflow
     uses: ./.github/workflows/reused.yml
+    with:
+     environment: ${{ inputs.TARGE_ENVIRONMENT }}
 
 
   build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.TARGE_ENVIRONMENT }}
+    needs: call-reusable
 
     steps:
       - name: Checkout code
