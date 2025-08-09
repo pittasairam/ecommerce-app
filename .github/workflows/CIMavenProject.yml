@@ -8,6 +8,12 @@ on:
         default: dev
 
 jobs:
+  
+  call-reusable:
+    name: Call Reusable Workflow
+    uses: ./.github/workflows/reused.yml
+
+
   build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.TARGE_ENVIRONMENT }}
