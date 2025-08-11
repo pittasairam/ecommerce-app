@@ -16,7 +16,9 @@ RUN ./mvnw dependency:go-offline
 COPY ecommerce-app/src ./src
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+# Package the application
+RUN mvn clean package -DskipTests
+
 
 # Stage 2: Run the application using a lightweight JDK 17 image
 FROM eclipse-temurin:17-jdk-alpine
