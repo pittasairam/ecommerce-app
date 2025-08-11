@@ -1,0 +1,36 @@
+version: '3.8'
+ 
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Sai@123
+      MYSQL_DATABASE: test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Sai@123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+ 
+  app:
+    build: .
+    container_name: ecommerce-app
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_APPLICATION_NAME: ecommerce-app
+      SERVER_PORT: 9091
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://localhost:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/test
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Sai@123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "9091:9091"
+ 
+volumes:
+  mysql_data:
