@@ -1,29 +1,34 @@
-# Use an official Maven image with JDK 17
+# Stage 1: Build the application using Maven and JDK 17
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /ecommerce-app
 
-# Copy pom.xml and download dependencies
-COPY pom.xml .
-RUN mvn dependency:go-offline
+# Copy Maven wrapper and pom.xml
+COPY ecommerce-app/pom.xml .
+COPY ecommerce-app/.mvn .mvn
+COPY ecommerce-app/mvnw .
 
-# Copy source code
-COPY src ./src
+# Download dependencies
+RUN ./mvnw dependency:go-offline
 
-# Package the application
-RUN mvn clean package -DskipTests
+# Copy the source code
+COPY ecommerce-app/src ./src
 
-# Use a lightweight JDK 17 runtime image
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# Stage 2: Run the application using a lightweight JDK 17 image
 FROM eclipse-temurin:17-jdk-alpine
 
 # Set working directory
 WORKDIR /ecommerce-app
 
-# Copy the jar from the build stage
+# Copy the built jar file
 COPY --from=build /ecommerce-app/target/*.jar ecommerce-app.jar
 
-# Expose the port your Spring Boot app runs on
+# Expose the application port
 EXPOSE 9091
-# Run the application
+
+# Run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "ecommerce-app.jar"]
