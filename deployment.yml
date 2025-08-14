@@ -13,7 +13,7 @@ spec:
         app: ecommerce-app
     spec:
       containers:
-      - name: java-app
-        image: ecommerce-app:latest  # Replace with your actual image name
+      - name: ecommerce-app
+        image: pittasairam/ecommerce-app:latest  # Replace with your actual image name
         ports:
         - containerPort: 9091
