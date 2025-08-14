@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 9091
       targetPort: 9091
-      nodePort: 8085 
+      nodePort: 30010
