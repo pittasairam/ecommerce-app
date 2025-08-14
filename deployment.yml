@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: java-app-deployment
+  name: ecommerce-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: java-app
+      app: ecommerce-app
   template:
     metadata:
       labels:
-        app: java-app
+        app: ecommerce-app
     spec:
       containers:
       - name: java-app
-        image: your-java-app-image:latest  # Replace with your actual image name
+        image: ecommerce-app:latest  # Replace with your actual image name
         ports:
         - containerPort: 9091
