@@ -23,3 +23,22 @@ jobs:
       - name: Run Docker
         run: |
           docker run -d --name ecommerce-app -p 9091:9091 $DOCKER_IMAGE:latest
+
+      - name: Push docker image
+        run: |
+         docker push $DOCKER_IMAGE:${{github.sha}}
+         docker push $DOCKER_IMAGE:latest
+       
+      - name: Setup Kubectl for kubernetes
+        uses: azure/setup-kubectl@v3
+        with:
+         version: 'latest'
+      - name: Setup Minikube
+        run: |
+         minikube start
+         kubectl config use-context minikube
+       
+      - name: Deploy to Kubernetes
+        run: |
+         kubectl apply -f deployment.yml
+         kubectl apply -f service.yml
