@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_NAME }}
+  DOCKER_USERNAME: ${{ vars.DOCKER_NAME }}
   DOCKER_PASSWORD: ${{ secrets.NEW_DOCKER_PASSWORD }}
   DOCKER_IMAGE: pittasairam/ecom-app-image
 
