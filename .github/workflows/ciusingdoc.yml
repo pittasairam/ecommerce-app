@@ -6,7 +6,7 @@ on:
 env:
   DOCKER_USERNAME: ${{ vars.DOCKER_NAME }}
   DOCKER_PASSWORD: ${{ secrets.NEW_DOCKER_PASSWORD }}
-  DOCKER_IMAGE: pittasairam/ecom-app-image
+  DOCKER_IMAGE: pittasairam/ecommerce-app
 
 jobs:
   build-using-docker:
