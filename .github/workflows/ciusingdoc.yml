@@ -4,16 +4,19 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_USERNAME: ${{ vars.DOCKER_NAME }}
-  DOCKER_PASSWORD: ${{ secrets.NEW_DOCKER_PASSWORD }}
-  DOCKER_IMAGE: pittasairam/ecom-app-image   
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_IMAGE: pittasairam/ecom-app-image
 
 jobs:
   build-using-docker:
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
+
+      - name: Docker Login
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
       - name: Docker Build
         run: |
@@ -21,24 +24,22 @@ jobs:
           docker tag $DOCKER_IMAGE:${{ github.sha }} $DOCKER_IMAGE:latest
 
       - name: Run Docker
-        run: |
-          docker run -d --name ecommerce-app -p 9091:9091 $DOCKER_IMAGE:latest
+        run: docker run -d --name ecommerce-app -p 9091:9091 $DOCKER_IMAGE:latest
 
-      - name: Push docker image
+      - name: Push Docker Image
         run: |
-         docker push $DOCKER_IMAGE:${{github.sha}}
-         docker push $DOCKER_IMAGE:latest
-       
-      - name: Setup Kubectl for kubernetes
+          docker push $DOCKER_IMAGE:${{ github.sha }}
+          docker push $DOCKER_IMAGE:latest
+
+      - name: Setup Kubectl
         uses: azure/setup-kubectl@v3
         with:
-         version: 'latest'
-      - name: Setup Minikube
-        run: |
-         minikube start
-         kubectl config use-context minikube
-       
+          version: 'latest'
+
+      - name: Setup KinD
+        uses: helm/kind-action@v1.7.0
+
       - name: Deploy to Kubernetes
         run: |
-         kubectl apply -f deployment.yml
-         kubectl apply -f service.yml
+          kubectl apply -f deployment.yml
+          kubectl apply -f service.yml
