@@ -1,8 +1,8 @@
-# Stage 1: Build the application using Maven
+# Stage 1: Build the application using Maven and JDK 17
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 
 # Set working directory inside the container
-WORKDIR /app
+WORKDIR /ecomapp
 
 # Copy Maven wrapper and pom.xml
 COPY ecomapp/pom.xml .
@@ -25,13 +25,13 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 
 # Set working directory
-WORKDIR /app
+WORKDIR /ecomapp
 
-# Copy the built jar file from the build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy the built jar file
+COPY --from=build /ecomapp/target/*.jar ecomapp.jar
 
 # Expose the application port
 EXPOSE 9091
 
 # Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "ecomapp.jar"]
